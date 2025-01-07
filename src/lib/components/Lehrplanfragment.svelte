@@ -1,13 +1,10 @@
 <script>
-	import { db, updateNode } from '$lib/db';
+	import { db } from '$lib/db';
 	import AddLink from '$lib/components/AddLink.svelte';
 	import AddFragment from '$lib/components/AddFragment.svelte';
-	import Save from './icons/Save.svelte';
 	import InputText from '$lib/components/InputText.svelte';
 
 	export let fragmentId;
-	let selectedBereich;
-	let edit = false;
 
 	$: console.log('fragmentId', fragmentId);
 </script>

@@ -5,36 +5,38 @@
 	import config from '$lib/config';
 </script>
 
-
 <details class="dropdown">
 	<summary class="btn m-1"> <Plus /> </summary>
 	<ul class="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
 		{#each Object.keys(config[$db.selectedState]) as bereich}
-			<!-- maybe use @const here to make a map of bereiche and their nodes  -->
-			<!-- to build the menu -->
-			<li>
-				<a onclick={() => addFragment(bereich, fragmentId)}>{bereich}</a>
-			</li>
+			{@const bereichNodes = $db.nodes.filter((n) => n.type === bereich)}
+			{#if bereichNodes.length}
+				<li>
+					<details>
+						<summary>{bereich}</summary>
+						<ul>
+							{#each bereichNodes as node}
+								<li><a>{node.title}</a></li>
+							{/each}
+						</ul>
+					</details>
+				</li>
+			{:else}
+				<li>
+					<a onclick={() => addFragment(bereich, fragmentId)}>{bereich}</a>
+				</li>
+			{/if}
 		{/each}
-		<!-- <li><a>Item 1</a></li> -->
-		<!-- <li> -->
-		<!-- 	<details open> -->
-		<!-- 		<summary>Parent</summary> -->
-		<!-- 		<ul> -->
-		<!-- 			<li><a>Submenu 1</a></li> -->
-		<!-- 			<li><a>Submenu 2</a></li> -->
-		<!-- 			<li> -->
-		<!-- 				<details open> -->
-		<!-- 					<summary>Parent</summary> -->
-		<!-- 					<ul> -->
-		<!-- 						<li><a>Submenu 1</a></li> -->
-		<!-- 						<li><a>Submenu 2</a></li> -->
-		<!-- 					</ul> -->
-		<!-- 				</details> -->
-		<!-- 			</li> -->
-		<!-- 		</ul> -->
-		<!-- 	</details> -->
-		<!-- </li> -->
-		<!-- <li><a>Item 3</a></li> -->
+		<!-- Jahrgangsstufen -->
+		<li>
+			<details>
+				<summary>Jahrgangsstufen</summary>
+				<ul>
+					{#each Object.values(config['Jahrgangsstufen']) as j}
+						<li><a>{j}</a></li>
+					{/each}
+				</ul>
+			</details>
+		</li>
 	</ul>
 </details>

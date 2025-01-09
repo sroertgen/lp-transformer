@@ -52,7 +52,7 @@
 		</div>
 	{/if}
 
-	<button onclick={addLehrplanfragment} class="btn btn-circle">
+	<button disabled={!$db.selectedState} onclick={addLehrplanfragment} class="btn btn-circle">
 		<Plus />
 	</button>
 </div>

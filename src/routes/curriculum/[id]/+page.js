@@ -4,8 +4,6 @@ import { get } from 'svelte/store';
 
 /** @type {import('./$types').PageLoad} */
 export function load({ params }) {
-  //TODO check db for id and return data
-  //otherwise not found
 	const curriculum = get(db).curricula.find((c) => c.id == params.id)
   if (curriculum) {
 		return curriculum

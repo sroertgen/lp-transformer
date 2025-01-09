@@ -1,26 +1,18 @@
 <script>
-	import { config } from '$lib/config';
-	import { db, lehrplanfragmente } from '$lib/db';
-	import { shortUUID } from '$lib/utils';
+	import { db, lehrplanfragmente, addFragment,setSelectedCurriculum } from '$lib/db';
 	import Fragment from '$lib/components/Fragment.svelte';
 	import Plus from '$lib/components/icons/Plus.svelte';
 	/** @type {{ data: import('./$types').PageData }} */
-	let { data } = $props();
-
-	function addLehrplanfragment() {
-		db.update((d) => {
-			const fragment = {
-				id: shortUUID(),
-				type: 'Lehrplanfragment',
-			};
-			const nodes = [...d.nodes, fragment];
-			return { ...d, nodes };
-		});
-	}
+	let { data } = $props(); //the curriculum
+  
+  // if we visit directly curriculum might not be set
+  if (!db.selectedCurriculum) {
+    setSelectedCurriculum(data.id)
+  }
 </script>
 
 <div class="flex flex-col items-center">
-	<h1>{data.title}</h1>
+	<h1 class="text-lg">{data.title} ({data.state})</h1>
 
 	{#if $lehrplanfragmente.length > 0}
 		<div class="w-1/2">
@@ -30,7 +22,7 @@
 		</div>
 	{/if}
 
-	<button disabled={!$db.selectedState} onclick={addLehrplanfragment} class="btn btn-circle">
+	<button onclick={() => addFragment("Lehrplanfragment")} class="btn btn-circle">
 		<Plus />
 	</button>
 </div>

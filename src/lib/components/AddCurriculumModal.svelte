@@ -1,12 +1,13 @@
 <script>
 	import { config } from '$lib/config';
-	import { addCurriculum, changeSelectedState } from '$lib/db.js';
+	import { db, addCurriculum, changeSelectedState } from '$lib/db.js';
 	export let modalId = 'modal';
 	let dialogRef;
 
-	const curriculum = {};
+	let curriculum = {};
 
-	export function open() {
+	export function open(curriculumId=null) {
+    if (curriculumId !== null) curriculum = $db.curricula.find(c => c.id === curriculumId)
 		if (dialogRef) {
 			dialogRef.showModal();
 		}
@@ -34,6 +35,7 @@
 		</label>
 		<select
 			onchange={(e) => changeSelectedState(e.target.value)}
+      bind:value={curriculum.state}
 			class="select select-bordered w-full max-w-xs"
 		>
 			<option disabled selected>Bitte Bundesland auswählen</option>
@@ -45,7 +47,8 @@
 
 		<div class="modal-action">
 			<form method="dialog">
-				<button onclick={addCurriculum(curriculum)} class="btn">Close</button>
+				<button onclick={addCurriculum(curriculum)} class="btn">Lehrplan anlegen</button>
+				<button class="btn">Close</button>
 			</form>
 		</div>
 	</div>

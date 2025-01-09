@@ -2,7 +2,7 @@ import { writable, derived } from 'svelte/store';
 import { shortUUID } from '$lib/utils.js';
 
 export const db = writable({
-	selectedState: null,
+	selectedCurriculum: null,
 	nodes: [],
 	curricula: [
 		{
@@ -11,9 +11,14 @@ export const db = writable({
 			classLevel: 8,
 			schoolSubject: 'Mathematik',
 			schoolType: 'Realschule',
+      state: "Hessen",
 		}
 	]
 });
+
+export const selectedState = derived(db, ($db) => 
+  $db.curricula.find(c => c.id === $db.selectedCurriculum).state
+) 
 
 export const lehrplanfragmente = derived(db, ($db) =>
 	$db.nodes.filter((n) => n.type === 'Lehrplanfragment')
@@ -49,7 +54,7 @@ export const buildNodeTree = (rootId) => {
 	});
 };
 
-export function addFragment(type, parent) {
+export function addFragment(type, parent=null) {
 	db.update((d) => {
 		const fragment = {
 			id: shortUUID(),
@@ -91,3 +96,6 @@ export function changeSelectedState(val) {
 		db.update((d) => ({ ...d, selectedState: val }));
 	}
 
+export function setSelectedCurriculum(val) {
+		db.update((d) => ({ ...d, selectedCurriculum: val }));
+	}

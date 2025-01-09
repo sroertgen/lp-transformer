@@ -14,7 +14,7 @@
 </script>
 
 <div
-	class="border-1 flex min-h-64 flex-col gap-2 border-l"
+	class="w-full border-1 flex min-h-64 flex-col gap-2 border-l"
 	class:p-2={parentId}
 	class:border-l={!parentIsLehrplanfragment && parentId}
 	class:border={fragment.type === 'Lehrplanfragment'}

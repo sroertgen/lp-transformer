@@ -2,7 +2,7 @@
 	import { config } from '$lib/config';
 	import { db, lehrplanfragmente } from '$lib/db';
 	import { shortUUID } from '$lib/utils';
-	import Lehrplanfragment from '$lib/components/Lehrplanfragment.svelte';
+	import Fragment from '$lib/components/Fragment.svelte';
 	import Plus from '$lib/components/icons/Plus.svelte';
 	/** @type {{ data: import('./$types').PageData }} */
 	let { data } = $props();
@@ -47,7 +47,7 @@
 	{#if $lehrplanfragmente.length > 0}
 		<div class="w-1/2">
 			{#each $lehrplanfragmente as node}
-				<Lehrplanfragment fragmentId={node.id} />
+				<Fragment fragmentId={node.id} />
 			{/each}
 		</div>
 	{/if}

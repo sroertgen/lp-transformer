@@ -8,10 +8,17 @@
 	export let parentId = null;
 
 	const fragment = $db.nodes.find((f) => f.id === fragmentId);
+	const parentIsLehrplanfragment =
+		$db.nodes.find((n) => n.id === parentId)?.type === 'Lehrplanfragment';
 	const nodeTree = buildNodeTree(fragmentId);
+	console.log(parentIsLehrplanfragment);
 </script>
 
-<div class="border-1 m-1 flex min-h-64 flex-col gap-2 rounded border border-solid p-2">
+<div
+	class="border-1 flex min-h-64 flex-col gap-2 border-l"
+	class:p-2={parentId}
+	class:border-l={!parentIsLehrplanfragment && parentId}
+>
 	<!-- Only show fragment titles on lehrplanfragment parents -->
 	{#if $db.nodes.find((n) => n.type === 'Lehrplanfragment' && n.id === fragmentId)}
 		<InputText
@@ -38,9 +45,10 @@
 		{#each $nodeTree.children as child}
 			<svelte:self fragmentId={child.id} parentId={fragmentId} />
 		{/each}
-
-		<div class="divider"></div>
 	{/if}
-
-	<AddFragment title={parentId ? "Unterbereich hinzufügen" : "Bereich hinzufügen"} parentId={fragmentId} />
+	<AddFragment
+		title={parentId ? 'Unterbereich hinzufügen' : 'Bereich hinzufügen'}
+		parentId={fragmentId}
+	/>
+	<div class="divider"></div>
 </div>

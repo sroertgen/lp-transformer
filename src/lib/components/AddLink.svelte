@@ -1,8 +1,10 @@
 <script>
 	import Link from '$lib/components/icons/Link.svelte';
 
-	import { db, selectedState } from '$lib/db';
+	import { db, selectedState, updateNode } from '$lib/db';
 	import { config } from '$lib/config';
+
+  export let fragmentId;
 </script>
 
 <details class="dropdown">
@@ -16,15 +18,17 @@
 						<summary>{bereich}</summary>
 						<ul>
 							{#each bereichNodes as node}
-								<li><a onclick={addLinkToNode(node.id, bereich)}>{node.title}</a></li>
+								<li>
+									<a onclick={() => updateNode(fragmentId, bereich, node.title)}>{node.title}</a>
+								</li>
 							{/each}
 						</ul>
 					</details>
 				</li>
-			<!-- {:else} -->
-			<!-- 	<li> -->
-			<!-- 		<a onclick={() => addFragment(bereich, fragmentId)}>{bereich}</a> -->
-			<!-- 	</li> -->
+				<!-- {:else} -->
+				<!-- 	<li> -->
+				<!-- 		<a onclick={() => addFragment(bereich, fragmentId)}>{bereich}</a> -->
+				<!-- 	</li> -->
 			{/if}
 		{/each}
 		<!-- Jahrgangsstufen -->
@@ -33,7 +37,7 @@
 				<summary>Jahrgangsstufen</summary>
 				<ul>
 					{#each Object.values(config['Jahrgangsstufen']) as j}
-						<li><a>{j}</a></li>
+						<li><a onclick={() => updateNode(fragmentId, "educationalLevel", j)}>{j}</a></li>
 					{/each}
 				</ul>
 			</details>

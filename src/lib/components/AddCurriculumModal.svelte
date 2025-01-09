@@ -47,7 +47,7 @@
 
 		<div class="modal-action">
 			<form method="dialog">
-				<button onclick={addCurriculum(curriculum)} class="btn">Lehrplan anlegen</button>
+				<button onclick={() => addCurriculum(curriculum)} class="btn">Lehrplan anlegen</button>
 				<button class="btn">Close</button>
 			</form>
 		</div>

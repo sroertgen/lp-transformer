@@ -38,7 +38,7 @@
 					placeholder="Bitte Beschreibung einfügen"
 				/>
 			</div>
-			<AddLink />
+			<AddLink {fragmentId} />
 		</div>
 	{/if}
 	{#if $nodeTree.children.length}

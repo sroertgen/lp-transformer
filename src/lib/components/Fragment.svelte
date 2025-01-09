@@ -11,15 +11,15 @@
 	const parentIsLehrplanfragment =
 		$db.nodes.find((n) => n.id === parentId)?.type === 'Lehrplanfragment';
 	const nodeTree = buildNodeTree(fragmentId);
-	console.log(parentIsLehrplanfragment);
 </script>
 
 <div
 	class="border-1 flex min-h-64 flex-col gap-2 border-l"
 	class:p-2={parentId}
 	class:border-l={!parentIsLehrplanfragment && parentId}
+	class:border={fragment.type === 'Lehrplanfragment'}
+	class:m-1={fragment.type === 'Lehrplanfragment'}
 >
-	<!-- Only show fragment titles on lehrplanfragment parents -->
 	{#if $db.nodes.find((n) => n.type === 'Lehrplanfragment' && n.id === fragmentId)}
 		<InputText
 			nodeId={fragmentId}

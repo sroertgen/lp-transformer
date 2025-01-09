@@ -7,10 +7,6 @@
 	/** @type {{ data: import('./$types').PageData }} */
 	let { data } = $props();
 
-	function changeSelectedState(val) {
-		db.update((d) => ({ ...d, selectedState: val }));
-	}
-
 	function addLehrplanfragment() {
 		db.update((d) => {
 			const fragment = {
@@ -25,24 +21,6 @@
 
 <div class="flex flex-col items-center">
 	<h1>{data.title}</h1>
-
-	<!-- TODO write selection to db -->
-	<!-- TODO show possible building blocks after selection -->
-
-	{#if $db.selectedState}
-		<h1>{$db.selectedState}</h1>
-	{/if}
-
-	<select
-		onchange={(e) => changeSelectedState(e.target.value)}
-		class="select select-bordered w-full max-w-xs"
-	>
-		<option disabled selected>Bitte Bundesland auswählen</option>
-
-		{#each Object.keys(config) as state}
-			<option>{state}</option>
-		{/each}
-	</select>
 
 	{#if $lehrplanfragmente.length > 0}
 		<div class="w-1/2">

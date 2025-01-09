@@ -11,28 +11,6 @@ export const db = writable({
 			classLevel: 8,
 			schoolSubject: 'Mathematik',
 			schoolType: 'Realschule',
-			children: [
-				{
-					id: 1,
-					type: 'Kompetenzbereich',
-					title: 'Kompetenzbereiche des Faches',
-					notation: 4,
-					description:
-						'Die mathematische Allgemeinbildung zielt auf die Fähigkeit der Lernenden, mathematisches Wissen funktional und flexibel einzusetzen Wissen allein ist keine Kompetenz. Die Lernenden erwerben allgemeine mathematische Kompetenzen, indem sie sich mit Problemstellungen auseinandersetzen, deren Lösung mathematische Strukturen erfordert.',
-					children: [
-						{
-							id: 2,
-							type: 'Kompetenzbereich',
-							title: 'Darstellen',
-							description:
-								'Die Mathematik bietet verschiedene, sich gegenseitig ergänzende Darstellungsformen, wie Symbol, Tabelle, Graph und Wort, um Objekte und Situationen zu beschreiben. Die Lernenden unterscheiden und interpretieren Darstellungen, wählen Darstellungsformen aus und wenden sie an. Sie erkennen Beziehungen zwischen Darstellungsformen und wechseln bei Bedarf zwischen ihnen.'
-						}
-					]
-				},
-				{
-					id: 3
-				}
-			]
 		}
 	]
 });
@@ -56,7 +34,6 @@ export const buildNodeTree = (rootId) => {
 
 			let node = tree.get(item.id);
 
-			// Handle root node assignment
 			if (node.id === rootId) {
 				root = node;
 			}
@@ -99,3 +76,18 @@ export function updateNode(id, field, val) {
 		return { ...d, nodes }; // Return updated array (optional)
 	});
 }
+
+export function addCurriculum(c) {
+  db.update(d => {
+    const curriculum = {
+      id: shortUUID(),
+      ...c
+    }
+    const curricula = [...d.curricula, curriculum]
+    return {...d, curricula}
+  })
+}
+export function changeSelectedState(val) {
+		db.update((d) => ({ ...d, selectedState: val }));
+	}
+

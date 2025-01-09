@@ -2,7 +2,7 @@
 	import Link from '$lib/components/icons/Link.svelte';
 
 	import { db, addFragment, updateNode } from '$lib/db';
-	import config from '$lib/config';
+	import { config, bindings } from '$lib/config';
 </script>
 
 <details class="dropdown">
@@ -16,15 +16,15 @@
 						<summary>{bereich}</summary>
 						<ul>
 							{#each bereichNodes as node}
-								<li><a>{node.title}</a></li>
+								<li><a onclick={addLinkToNode(node.id, bereich)}>{node.title}</a></li>
 							{/each}
 						</ul>
 					</details>
 				</li>
-			{:else}
-				<li>
-					<a onclick={() => addFragment(bereich, fragmentId)}>{bereich}</a>
-				</li>
+			<!-- {:else} -->
+			<!-- 	<li> -->
+			<!-- 		<a onclick={() => addFragment(bereich, fragmentId)}>{bereich}</a> -->
+			<!-- 	</li> -->
 			{/if}
 		{/each}
 		<!-- Jahrgangsstufen -->

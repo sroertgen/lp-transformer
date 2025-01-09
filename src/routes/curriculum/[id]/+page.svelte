@@ -1,23 +1,21 @@
 <script>
-	import config from '$lib/config';
+	import { config } from '$lib/config';
 	import { db, lehrplanfragmente } from '$lib/db';
-  import {shortUUID} from '$lib/utils';
-  import Lehrplanfragment from '$lib/components/Lehrplanfragment.svelte';
-  import Plus from "$lib/components/icons/Plus.svelte";
+	import { shortUUID } from '$lib/utils';
+	import Lehrplanfragment from '$lib/components/Lehrplanfragment.svelte';
+	import Plus from '$lib/components/icons/Plus.svelte';
 	/** @type {{ data: import('./$types').PageData }} */
 	let { data } = $props();
 
 	function changeSelectedState(val) {
-		console.log(val);
 		db.update((d) => ({ ...d, selectedState: val }));
 	}
 
 	function addLehrplanfragment() {
 		db.update((d) => {
 			const fragment = {
-        id: shortUUID(),
+				id: shortUUID(),
 				type: 'Lehrplanfragment',
-				children: []
 			};
 			const nodes = [...d.nodes, fragment];
 			return { ...d, nodes };
@@ -47,12 +45,14 @@
 	</select>
 
 	{#if $lehrplanfragmente.length > 0}
-		{#each $lehrplanfragmente as node}
-      <Lehrplanfragment fragmentId={node.id} />
-		{/each}
+		<div class="w-1/2">
+			{#each $lehrplanfragmente as node}
+				<Lehrplanfragment fragmentId={node.id} />
+			{/each}
+		</div>
 	{/if}
 
 	<button onclick={addLehrplanfragment} class="btn btn-circle">
-    <Plus />
+		<Plus />
 	</button>
 </div>

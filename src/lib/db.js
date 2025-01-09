@@ -44,15 +44,40 @@ export const kompetenzbereiche = derived(db, ($db) =>
 	$db.nodes.filter((n) => n.type === 'Kompetenzbereich')
 );
 
+export const buildNodeTree = (rootId) => {
+	return derived(db, ($db) => {
+		const tree = new Map();
+		let root;
+
+		$db.nodes.forEach((item) => {
+			if (!tree.has(item.id)) {
+				tree.set(item.id, { ...item, children: [] });
+			}
+
+			let node = tree.get(item.id);
+
+			// Handle root node assignment
+			if (node.id === rootId) {
+				root = node;
+			}
+
+			if (item.parent !== null) {
+				if (!tree.has(item.parent)) {
+					tree.set(item.parent, {...item, children: [] });
+				}
+				tree.get(item.parent).children.push(item);
+			}
+		});
+    return root
+	});
+};
+
 export function addFragment(type, parent) {
 	db.update((d) => {
 		const fragment = {
 			id: shortUUID(),
 			type,
-			parent, // lehrplanfragment
-			children: [] // list of ids. in combination with parent id i will know where to place the element
-      // at the same time i can get all related items for the fragment
-      // idea is that a certain element will be defined one time and used multiple times later
+			parent
 		};
 		const nodes = [...d.nodes, fragment];
 		return { ...d, nodes };

@@ -1,9 +1,9 @@
 <script>
-	import config from '$lib/config';
+	import { config } from '$lib/config';
 	import { db, addFragment } from '$lib/db';
 
 	export let title;
-	export let fragmentId;
+	export let parentId;
 </script>
 
 <details
@@ -18,7 +18,7 @@
 			<li>
 				<a
 					onclick={(e) => {
-						addFragment(bereich, fragmentId);
+						addFragment(bereich, parentId);
 					}}>{bereich}</a
 				>
 			</li>

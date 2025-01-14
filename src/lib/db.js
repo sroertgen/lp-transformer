@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { writable, derived, get } from 'svelte/store';
 import { shortUUID } from '$lib/utils.js';
 
 export const db = writable({
@@ -11,14 +11,15 @@ export const db = writable({
 			classLevel: 8,
 			schoolSubject: 'Mathematik',
 			schoolType: 'Realschule',
-      state: "Hessen",
+			state: 'Hessen'
 		}
 	]
 });
 
-export const selectedState = derived(db, ($db) => 
-  $db.curricula.find(c => c.id === $db.selectedCurriculum).state
-) 
+export const selectedState = derived(
+	db,
+	($db) => $db.curricula.find((c) => c.id === $db.selectedCurriculum).state
+);
 
 export const lehrplanfragmente = derived(db, ($db) =>
 	$db.nodes.filter((n) => n.type === 'Lehrplanfragment')
@@ -45,16 +46,16 @@ export const buildNodeTree = (rootId) => {
 
 			if (item.parent !== null) {
 				if (!tree.has(item.parent)) {
-					tree.set(item.parent, {...item, children: [] });
+					tree.set(item.parent, { ...item, children: [] });
 				}
 				tree.get(item.parent).children.push(item);
 			}
 		});
-    return root
+		return root;
 	});
 };
 
-export function addFragment(type, parent=null) {
+export function addFragment(type, parent = null) {
 	db.update((d) => {
 		const fragment = {
 			id: shortUUID(),
@@ -66,36 +67,78 @@ export function addFragment(type, parent=null) {
 	});
 }
 
+function getChildren(parentId, nodes) {
+	let children = nodes.filter((node) => node.parent === parentId);
+	return children.concat(children.flatMap((child) => getChildren(child.id, nodes)));
+}
+
+export function removeFragment(id) {
+	const children = getChildren(id, get(db).nodes).map((e) => e.id);
+	children.push(id); // include parent
+	db.update((d) => {
+		const nodes = d.nodes.filter((n) => !children.includes(n.id));
+		return { ...d, nodes };
+	});
+}
+
 export function updateNode(id, field, val) {
 	db.update((d) => {
 		const nodes = d.nodes;
-		// Find the index of the node with the given id
 		const index = d.nodes.findIndex((node) => node.id === id);
 
 		if (index !== -1) {
 			nodes[index] = { ...nodes[index], [field]: val };
+			console.log(nodes);
 		} else {
 			console.warn(`Node with id ${id} not found.`);
 		}
 
-		return { ...d, nodes }; // Return updated array (optional)
+		return { ...d, nodes };
+	});
+}
+
+export function toggleNodeLink(id, field, val) {
+	db.update((d) => {
+		const nodes = [...d.nodes];
+		const nodeIndex = nodes.findIndex((n) => n.id === id);
+
+		if (nodeIndex === -1) return d;
+
+		const node = { ...nodes[nodeIndex] };
+		node.links = { ...node.links };
+
+		if (!node.links[field]) {
+			node.links[field] = [];
+		}
+
+		const indexOfVal = node.links[field].findIndex((v) => v === val);
+
+		if (indexOfVal !== -1) {
+			node.links[field] = node.links[field].filter((v) => v !== val);
+		} else {
+			node.links[field] = [...node.links[field], val];
+		}
+
+		nodes[nodeIndex] = node;
+		console.log(nodes);
+		return { ...d, nodes };
 	});
 }
 
 export function addCurriculum(c) {
-  db.update(d => {
-    const curriculum = {
-      id: shortUUID(),
-      ...c
-    }
-    const curricula = [...d.curricula, curriculum]
-    return {...d, curricula}
-  })
+	db.update((d) => {
+		const curriculum = {
+			id: shortUUID(),
+			...c
+		};
+		const curricula = [...d.curricula, curriculum];
+		return { ...d, curricula };
+	});
 }
 export function changeSelectedState(val) {
-		db.update((d) => ({ ...d, selectedState: val }));
-	}
+	db.update((d) => ({ ...d, selectedState: val }));
+}
 
 export function setSelectedCurriculum(val) {
-		db.update((d) => ({ ...d, selectedCurriculum: val }));
-	}
+	db.update((d) => ({ ...d, selectedCurriculum: val }));
+}

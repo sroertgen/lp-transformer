@@ -1,14 +1,27 @@
 <script>
 	import Link from '$lib/components/icons/Link.svelte';
 
-	import { db, selectedState, updateNode } from '$lib/db';
+	import { db, selectedState, updateNode, toggleNodeLink } from '$lib/db';
 	import { config } from '$lib/config';
 
-  export let fragmentId;
+	export let fragmentId;
+
+	const additionalLinks = {
+		Jahrgangsstufen: config['Jahrgangsstufen'],
+		Abschlüsse: config['Abschlüsse']
+	};
+	console.log(additionalLinks);
+
+	$: fragmentNode = $db.nodes.find((n) => n.id === fragmentId);
 </script>
 
 <details class="dropdown">
-	<summary class="btn m-1"> <Link /> </summary>
+	<summary class="btn m-1">
+		<div class="flex flex-row items-center">
+			<Link />
+			<span>Link einfügen</span>
+		</div>
+	</summary>
 	<ul class="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
 		{#each Object.keys(config[$selectedState]) as bereich}
 			{@const bereichNodes = $db.nodes.filter((n) => n.type === bereich)}
@@ -18,8 +31,12 @@
 						<summary>{bereich}</summary>
 						<ul>
 							{#each bereichNodes as node}
-								<li>
-									<a onclick={() => updateNode(fragmentId, bereich, node.title)}>{node.title}</a>
+								<li
+									class:text-primary-content={fragmentNode?.links?.[bereich]?.includes(node.title)}
+									class:bg-primary={fragmentNode?.links?.[bereich]?.includes(node.title)}
+								>
+									<a onclick={() => toggleNodeLink(fragmentId, bereich, node.title)}>{node.title}</a
+									>
 								</li>
 							{/each}
 						</ul>
@@ -33,14 +50,21 @@
 		{/each}
 		<!-- Jahrgangsstufen -->
 		<li>
-			<details>
-				<summary>Jahrgangsstufen</summary>
-				<ul>
-					{#each Object.values(config['Jahrgangsstufen']) as j}
-						<li><a onclick={() => updateNode(fragmentId, "educationalLevel", j)}>{j}</a></li>
-					{/each}
-				</ul>
-			</details>
+			{#each Object.entries(additionalLinks) as link}
+				<details>
+					<summary>{link[0]}</summary>
+					<ul>
+						{#each link[1] as j}
+							<li
+								class:text-primary-content={fragmentNode?.links?.[link[0]]?.includes(j)}
+								class:bg-primary={fragmentNode?.links?.[link[0]]?.includes(j)}
+							>
+								<a onclick={() => toggleNodeLink(fragmentId, link[0], j)}>{j}</a>
+							</li>
+						{/each}
+					</ul>
+				</details>
+			{/each}
 		</li>
 	</ul>
 </details>

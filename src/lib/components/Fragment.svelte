@@ -1,20 +1,21 @@
 <script>
 	import { db, buildNodeTree } from '$lib/db';
-	import AddLink from '$lib/components/AddLink.svelte';
 	import AddFragment from '$lib/components/AddFragment.svelte';
+	import RemoveFragment from '$lib/components/RemoveFragment.svelte';
 	import InputText from '$lib/components/InputText.svelte';
+	import LinksForFragment from '$lib/components/LinksForFragment.svelte';
 
 	export let fragmentId;
 	export let parentId = null;
 
-	const fragment = $db.nodes.find((f) => f.id === fragmentId);
+	$: fragment = $db.nodes.find((f) => f.id === fragmentId);
 	const parentIsLehrplanfragment =
 		$db.nodes.find((n) => n.id === parentId)?.type === 'Lehrplanfragment';
 	const nodeTree = buildNodeTree(fragmentId);
 </script>
 
 <div
-	class="w-full border-1 flex min-h-64 flex-col gap-2 border-l"
+	class="border-1 flex min-h-64 w-full flex-col gap-2 border-l"
 	class:p-2={parentId}
 	class:border-l={!parentIsLehrplanfragment && parentId}
 	class:border={fragment.type === 'Lehrplanfragment'}
@@ -29,7 +30,10 @@
 	{:else}
 		<div class="flex flex-row justify-between gap-2">
 			<div class="flex w-full flex-col gap-2">
-				<p class="mb-2 text-lg">{fragment.type}</p>
+				<div class="flex flex-row items-center gap-2">
+					<p class="text-lg">{fragment.type}</p>
+					<RemoveFragment {fragmentId} />
+				</div>
 				<InputText nodeId={fragmentId} property="title" placeholder="Bitte Titel einfügen" />
 				<InputText
 					nodeId={fragmentId}
@@ -38,8 +42,10 @@
 					placeholder="Bitte Beschreibung einfügen"
 				/>
 			</div>
-			<AddLink {fragmentId} />
 		</div>
+	{/if}
+	{#if parentId !== null}
+		<LinksForFragment {fragmentId} />
 	{/if}
 	{#if $nodeTree.children.length}
 		{#each $nodeTree.children as child}
@@ -50,5 +56,5 @@
 		title={parentId ? 'Unterbereich hinzufügen' : 'Bereich hinzufügen'}
 		parentId={fragmentId}
 	/>
-	<div class="divider"></div>
 </div>
+<div class="divider"></div>

@@ -10,13 +10,12 @@
 		Jahrgangsstufen: config['Jahrgangsstufen'],
 		Abschlüsse: config['Abschlüsse']
 	};
-	console.log(additionalLinks);
 
 	$: fragmentNode = $db.nodes.find((n) => n.id === fragmentId);
 </script>
 
 <details class="dropdown">
-	<summary class="btn m-1">
+	<summary class="btn btn-ghost m-1">
 		<div class="flex flex-row items-center">
 			<Link />
 			<span>Link einfügen</span>
@@ -42,13 +41,8 @@
 						</ul>
 					</details>
 				</li>
-				<!-- {:else} -->
-				<!-- 	<li> -->
-				<!-- 		<a onclick={() => addFragment(bereich, fragmentId)}>{bereich}</a> -->
-				<!-- 	</li> -->
 			{/if}
 		{/each}
-		<!-- Jahrgangsstufen -->
 		<li>
 			{#each Object.entries(additionalLinks) as link}
 				<details>

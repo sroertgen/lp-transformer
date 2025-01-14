@@ -23,24 +23,29 @@
 >
 	{#if $db.nodes.find((n) => n.type === 'Lehrplanfragment' && n.id === fragmentId)}
 		<InputText
+			headline={true}
 			nodeId={fragmentId}
 			property="title"
 			placeholder="Bitte Titel des Fragments/Bereichs einfügen"
 		/>
 	{:else}
 		<div class="flex flex-row justify-between gap-2">
-			<div class="flex w-full flex-col gap-2">
-				<div class="flex flex-row items-center gap-2">
-					<p class="text-lg">{fragment.type}</p>
-					<RemoveFragment {fragmentId} />
+			<div class="flex w-full flex-row">
+				<div class="flex w-full flex-col gap-2">
+					<InputText nodeId={fragmentId} property="title" placeholder="Bitte Titel einfügen" />
+					<InputText
+						nodeId={fragmentId}
+						property="description"
+						textarea={true}
+						placeholder="Bitte Beschreibung einfügen"
+					/>
 				</div>
-				<InputText nodeId={fragmentId} property="title" placeholder="Bitte Titel einfügen" />
-				<InputText
-					nodeId={fragmentId}
-					property="description"
-					textarea={true}
-					placeholder="Bitte Beschreibung einfügen"
-				/>
+				<div class="ml-auto mr-0 flex flex-row items-start gap-2">
+					<div class="flex flex-row items-center">
+						<p class="text-lg">{fragment.type}</p>
+						<RemoveFragment {fragmentId} />
+					</div>
+				</div>
 			</div>
 		</div>
 	{/if}

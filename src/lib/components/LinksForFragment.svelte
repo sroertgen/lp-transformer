@@ -1,6 +1,7 @@
 <script>
-	import { db } from '$lib/db';
+	import { db, toggleNodeLink } from '$lib/db';
 	import AddLink from '$lib/components/AddLink.svelte';
+	import Trash from '$lib/components/icons/Trash.svelte';
 
 	export let fragmentId;
 
@@ -20,7 +21,15 @@
 				{links[0]}
 				<ul class="ml-2 list-inside list-disc">
 					{#each links[1] as link}
-						<li>{link}</li>
+						<div class="group relative flex flex-row items-center gap-2">
+							<li>{link}</li>
+							<div
+								onclick={() => toggleNodeLink(fragmentId, links[0], link)}
+								class="btn btn-ghost btn-sm hidden group-hover:flex"
+							>
+								<Trash />
+							</div>
+						</div>
 					{/each}
 				</ul>
 			</li>

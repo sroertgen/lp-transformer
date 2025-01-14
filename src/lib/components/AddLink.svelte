@@ -6,6 +6,17 @@
 
 	export let fragmentId;
 
+	let addResourceLinkModal;
+	let resourceLink;
+
+	function openModal() {
+		if (addResourceLinkModal) addResourceLinkModal.show();
+	}
+
+	function closeModal() {
+		if (addResourceLinkModal) addResourceLinkModal.close();
+	}
+
 	const additionalLinks = {
 		Jahrgangsstufen: config['Jahrgangsstufen'],
 		Abschlüsse: config['Abschlüsse']
@@ -43,6 +54,7 @@
 				</li>
 			{/if}
 		{/each}
+		<!-- additional categories -->
 		<li>
 			{#each Object.entries(additionalLinks) as link}
 				<details>
@@ -60,5 +72,26 @@
 				</details>
 			{/each}
 		</li>
+		<!-- material links -->
+		<li><a onclick={openModal}>Material-Link</a></li>
 	</ul>
 </details>
+
+<dialog bind:this={addResourceLinkModal} class="modal">
+	<div class="modal-box">
+		<h3 class="text-lg font-bold">Bitte Link zur Ressource eintragen</h3>
+		<label class="input input-bordered flex w-full items-center gap-2">
+			Link:
+			<input bind:value={resourceLink} type="text" class="grow" />
+		</label>
+		<div class="modal-action">
+			<form method="dialog">
+				<button
+					class="btn"
+					onclick={() => toggleNodeLink(fragmentId, 'relatedResource', resourceLink)}>Save</button
+				>
+				<button class="btn">Close</button>
+			</form>
+		</div>
+	</div>
+</dialog>

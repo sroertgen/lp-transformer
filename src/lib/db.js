@@ -55,14 +55,19 @@ export const buildNodeTree = (rootId) => {
 	});
 };
 
-export function addFragment(type, parent = null) {
+export function addFragment(type, parent = null, insertAtIndex = null) {
 	db.update((d) => {
 		const fragment = {
 			id: shortUUID(),
 			type,
 			parent
 		};
-		const nodes = [...d.nodes, fragment];
+		const nodes = [...d.nodes];
+		if (insertAtIndex === null) {
+			nodes.push(fragment);
+		} else {
+			nodes.splice(insertAtIndex, 0, fragment);
+		}
 		return { ...d, nodes };
 	});
 }

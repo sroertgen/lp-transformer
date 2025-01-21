@@ -49,11 +49,11 @@
 	{/if}
 {:else}
 	<div class="flex items-center gap-2">
-		<button class="btn btn-ghost btn-sm" onclick={toggleEdit}>
-			<Pencil />
-		</button>
 		<p class:text-lg={headline} class:ml-2={headline} class:font-bold={headline}>
 			{$db.nodes.find((n) => n.id === nodeId)[property] || placeholder}
 		</p>
+		<button class="btn btn-ghost btn-sm" onclick={toggleEdit}>
+			<Pencil />
+		</button>
 	</div>
 {/if}

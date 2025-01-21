@@ -13,7 +13,6 @@ export const config = {
 			children: []
 		},
 		'Lernzeitbezogene Kompetenzerwartung': {}
-		// Lehrplanfragment: {}
 	}
 };
 

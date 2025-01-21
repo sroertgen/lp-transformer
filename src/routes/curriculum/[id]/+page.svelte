@@ -14,9 +14,11 @@
 </script>
 
 <div class="flex flex-col items-center">
-	<div class="relative flex-row w-full">
-		<h1 class="text-lg absolute left-1/2 transform -translate-x-1/2">{data.title} ({data.state})</h1>
-		<div class="m-1 flex flex-row items-center gap-2 ml-auto">
+	<div class="relative w-full flex-row">
+		<h1 class="absolute left-1/2 -translate-x-1/2 transform text-lg">
+			{data.title} ({data.state})
+		</h1>
+		<div class="m-1 ml-auto flex flex-row items-center gap-2">
 			<Glasses />
 			<input type="checkbox" class="toggle" checked="checked" />
 			<Pencil />
@@ -24,9 +26,12 @@
 	</div>
 
 	{#if $lehrplanfragmente.length > 0}
-			{#each $lehrplanfragmente as node}
-				<Fragment fragmentId={node.id} />
-			{/each}
+		<button onclick={() => addFragment('Lehrplanfragment', null, 0)} class="btn btn-circle">
+			<Plus />
+		</button>
+		{#each $lehrplanfragmente as node (node.id)}
+			<Fragment fragmentId={node.id} />
+		{/each}
 	{/if}
 
 	<button onclick={() => addFragment('Lehrplanfragment')} class="btn btn-circle">

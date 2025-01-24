@@ -25,7 +25,7 @@
 							<li>{link}</li>
 							<div
 								onclick={() => toggleNodeLink(fragmentId, links[0], link)}
-								class="btn btn-ghost btn-sm hidden group-hover:flex"
+								class="btn btn-ghost btn-sm invisible group-hover:visible"
 							>
 								<Trash />
 							</div>

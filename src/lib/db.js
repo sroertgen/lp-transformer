@@ -21,9 +21,11 @@ export const selectedState = derived(
 	($db) => $db.curricula.find((c) => c.id === $db.selectedCurriculum).state
 );
 
-export const lehrplanfragmente = derived(db, ($db) =>
-	$db.nodes.filter((n) => n.type === 'Lehrplanfragment')
-);
+export const lehrplanfragmente = (curriculum) =>
+	derived(db, ($db) =>
+		$db.nodes.filter((n) => n.type === 'Lehrplanfragment' && n.curriculum === curriculum)
+	);
+
 export const kompetenzbereiche = derived(db, ($db) =>
 	$db.nodes.filter((n) => n.type === 'Kompetenzbereich')
 );
@@ -55,12 +57,13 @@ export const buildNodeTree = (rootId) => {
 	});
 };
 
-export function addFragment(type, parent = null, insertAtIndex = null) {
+export function addFragment(type, curriculum, parent = null, insertAtIndex = null) {
 	db.update((d) => {
 		const fragment = {
 			id: shortUUID(),
 			type,
-			parent
+			parent,
+			curriculum
 		};
 		const nodes = [...d.nodes];
 		if (insertAtIndex === null) {

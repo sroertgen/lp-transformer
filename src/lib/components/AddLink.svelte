@@ -7,14 +7,21 @@
 	export let fragmentId;
 
 	let addResourceLinkModal;
+	let addHinweisModal;
 	let resourceLink;
+	let hinweis;
 
-	function openModal() {
-		if (addResourceLinkModal) addResourceLinkModal.show();
+	const modalMap = {
+		link: addResourceLinkModal,
+		hinweis: addHinweisModal
+	};
+
+	function openModal(modal) {
+		if (modal) modal.show();
 	}
 
-	function closeModal() {
-		if (addResourceLinkModal) addResourceLinkModal.close();
+	function closeModal(modal) {
+		if (modal) modal.close();
 	}
 
 	const additionalLinks = {
@@ -73,7 +80,8 @@
 			{/each}
 		</li>
 		<!-- material links -->
-		<li><a onclick={openModal}>Material-Link</a></li>
+		<li><a onclick={() => openModal(addResourceLinkModal)}>Material-Link</a></li>
+		<li><a onclick={() => openModal(addHinweisModal)}>Hinweis</a></li>
 	</ul>
 </details>
 
@@ -89,6 +97,24 @@
 				<button
 					class="btn"
 					onclick={() => toggleNodeLink(fragmentId, 'relatedResource', resourceLink)}>Save</button
+				>
+				<button class="btn">Close</button>
+			</form>
+		</div>
+	</div>
+</dialog>
+
+<dialog bind:this={addHinweisModal} class="modal">
+	<div class="modal-box">
+		<h3 class="text-lg font-bold">Bitte Hinweis eintragen</h3>
+		<label class="input input-bordered flex w-full items-center gap-2">
+			Link:
+			<input bind:value={hinweis} type="text" class="grow" />
+		</label>
+		<div class="modal-action">
+			<form method="dialog">
+				<button class="btn" onclick={() => toggleNodeLink(fragmentId, 'hinweis', hinweis)}
+					>Save</button
 				>
 				<button class="btn">Close</button>
 			</form>

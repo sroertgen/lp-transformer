@@ -11,6 +11,8 @@
 	if (!db.selectedCurriculum) {
 		setSelectedCurriculum(data.id);
 	}
+	const curriculum = data.id;
+	const lpf = lehrplanfragmente(data.id);
 </script>
 
 <div class="flex flex-col items-center">
@@ -25,16 +27,19 @@
 		</div>
 	</div>
 
-	{#if $lehrplanfragmente.length > 0}
-		<button onclick={() => addFragment('Lehrplanfragment', null, 0)} class="btn btn-circle">
+	{#if $lpf.length > 0}
+		<button
+			onclick={() => addFragment('Lehrplanfragment', data.id, null, 0)}
+			class="btn btn-circle mb-2"
+		>
 			<Plus />
 		</button>
-		{#each $lehrplanfragmente as node (node.id)}
-			<Fragment fragmentId={node.id} />
+		{#each $lpf as node (node.id)}
+			<Fragment fragmentId={node.id} {curriculum} />
 		{/each}
 	{/if}
 
-	<button onclick={() => addFragment('Lehrplanfragment')} class="btn btn-circle">
+	<button onclick={() => addFragment('Lehrplanfragment', data.id)} class="btn btn-circle">
 		<Plus />
 	</button>
 </div>

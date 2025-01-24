@@ -7,6 +7,7 @@
 
 	export let fragmentId;
 	export let parentId = null;
+	export let curriculum;
 
 	$: fragment = $db.nodes.find((f) => f.id === fragmentId);
 	const parentIsLehrplanfragment =
@@ -15,9 +16,9 @@
 </script>
 
 <div
-	class="border-1 flex min-h-64 w-full flex-col gap-2 border-l"
-	class:p-2={parentId}
-	class:border-l={!parentIsLehrplanfragment && parentId}
+	class="border-1 my-[-4px] flex min-h-64 w-full flex-col gap-2 border-t-2"
+	class:pl-2={parentId}
+	class:border-l-2={!parentIsLehrplanfragment && parentId}
 	class:border={fragment.type === 'Lehrplanfragment'}
 	class:m-1={fragment.type === 'Lehrplanfragment'}
 >
@@ -29,7 +30,7 @@
 			placeholder="Bitte Titel des Fragments/Bereichs einfügen"
 		/>
 	{:else}
-		<div class="flex flex-row justify-between gap-2">
+		<div class="mt-2 flex flex-row justify-between gap-2">
 			<div class="flex w-full flex-row">
 				<div class="flex w-full flex-col gap-2">
 					<InputText nodeId={fragmentId} property="title" placeholder="Bitte Titel einfügen" />
@@ -60,6 +61,10 @@
 	<AddFragment
 		title={parentId ? 'Unterbereich hinzufügen' : 'Bereich hinzufügen'}
 		parentId={fragmentId}
+		{curriculum}
 	/>
 </div>
-<div class="divider"></div>
+
+{#if !parentId}
+	<div class="divider"></div>
+{/if}

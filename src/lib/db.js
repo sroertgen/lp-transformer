@@ -3,22 +3,14 @@ import { shortUUID } from '$lib/utils.js';
 
 export const db = writable({
 	selectedCurriculum: null,
-	nodes: [],
-	curricula: [
-		{
-			id: 1234,
-			title: 'Bildungsstandards und Inhaltsfelder',
-			classLevel: 8,
-			schoolSubject: 'Mathematik',
-			schoolType: 'Realschule',
-			state: 'Hessen'
-		}
-	]
+	nodes: []
 });
+
+export const curricula = derived(db, ($db) => $db.nodes.filter((n) => n.type === 'curriculum'));
 
 export const selectedState = derived(
 	db,
-	($db) => $db.curricula.find((c) => c.id === $db.selectedCurriculum).state
+	($db) => $db.nodes.find((c) => c.id === $db.selectedCurriculum).state
 );
 
 export const lehrplanfragmente = (curriculum) =>
@@ -75,8 +67,8 @@ export function addFragment(type, curriculum, parent = null, insertAtIndex = nul
 	});
 }
 
-function getChildren(parentId, nodes) {
-	let children = nodes.filter((node) => node.parent === parentId);
+export function getChildren(parentId, nodes) {
+	let children = nodes.filter((node) => node.parent === parentId || node.curriculum === parentId);
 	return children.concat(children.flatMap((child) => getChildren(child.id, nodes)));
 }
 
@@ -139,8 +131,9 @@ export function addCurriculum(c) {
 			id: shortUUID(),
 			...c
 		};
-		const curricula = [...d.curricula, curriculum];
-		return { ...d, curricula };
+		const nodes = [...d.nodes, curriculum];
+		return { ...d, nodes };
+		//TODO auf relay speichern
 	});
 }
 export function changeSelectedState(val) {

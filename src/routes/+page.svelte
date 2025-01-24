@@ -1,5 +1,6 @@
 <script>
-	import { db, setSelectedCurriculum } from '$lib/db.js';
+	import { db, setSelectedCurriculum, curricula } from '$lib/db.js';
+	import { getPublishedCurricula, deleteCurriculum, fetchPublishedCurricula } from '$lib/ndk';
 	import Plus from '$lib/components/icons/Plus.svelte';
 	import AddCurriculumModal from '$lib/components/AddCurriculumModal.svelte';
 
@@ -10,10 +11,12 @@
 			addCurriculumModalRef.open(curriculumId);
 		}
 	}
+
+	fetchPublishedCurricula();
 </script>
 
-<div class="flex flex-wrap justify-start gap-2 w-full">
-	{#each $db.curricula as curriculum}
+<div class="flex w-full flex-wrap justify-start gap-2">
+	{#each $curricula as curriculum (curriculum.id)}
 		<div class="card w-96 bg-base-100 shadow-xl">
 			<div class="card-body">
 				<h2 class="card-title">{curriculum.title}</h2>
@@ -25,6 +28,7 @@
 					>
 				</div>
 			</div>
+			<button onclick={() => deleteCurriculum(curriculum.eventId)}>Löschen</button>
 		</div>
 	{/each}
 </div>

@@ -4,10 +4,12 @@
 	export let modalId = 'modal';
 	let dialogRef;
 
-	let curriculum = {};
+	let curriculum = {
+		type: 'curriculum'
+	};
 
-	export function open(curriculumId=null) {
-    if (curriculumId !== null) curriculum = $db.curricula.find(c => c.id === curriculumId)
+	export function open(curriculumId = null) {
+		if (curriculumId !== null) curriculum = $db.curricula.find((c) => c.id === curriculumId);
 		if (dialogRef) {
 			dialogRef.showModal();
 		}
@@ -35,7 +37,7 @@
 		</label>
 		<select
 			onchange={(e) => changeSelectedState(e.target.value)}
-      bind:value={curriculum.state}
+			bind:value={curriculum.state}
 			class="select select-bordered w-full max-w-xs"
 		>
 			<option disabled selected>Bitte Bundesland auswählen</option>

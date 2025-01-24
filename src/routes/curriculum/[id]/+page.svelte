@@ -4,6 +4,8 @@
 	import Plus from '$lib/components/icons/Plus.svelte';
 	import Glasses from '$lib/components/icons/Glasses.svelte';
 	import Pencil from '$lib/components/icons/Pencil.svelte';
+	import Save from '$lib/components/icons/Save.svelte';
+	import { publishCurriculum } from '$lib/ndk';
 	/** @type {{ data: import('./$types').PageData }} */
 	let { data } = $props(); //the curriculum
 
@@ -16,15 +18,16 @@
 </script>
 
 <div class="flex flex-col items-center">
-	<div class="relative w-full flex-row">
-		<h1 class="absolute left-1/2 -translate-x-1/2 transform text-lg">
-			{data.title} ({data.state})
-		</h1>
-		<div class="m-1 ml-auto flex flex-row items-center gap-2">
+	<div class="flex w-full flex-row items-center justify-between">
+		<div class="flex flex-row items-center gap-2">
 			<Glasses />
 			<input type="checkbox" class="toggle" checked="checked" />
 			<Pencil />
 		</div>
+		<h1 class=" text-lg">
+			{data.title} ({data.state})
+		</h1>
+		<button onclick={() => publishCurriculum(curriculum)} class="btn btn-ghost"><Save /></button>
 	</div>
 
 	{#if $lpf.length > 0}

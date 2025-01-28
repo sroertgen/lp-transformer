@@ -125,17 +125,6 @@ export function toggleNodeLink(id, field, val) {
 	});
 }
 
-export function addCurriculum(c) {
-	db.update((d) => {
-		const curriculum = {
-			id: shortUUID(),
-			...c
-		};
-		const nodes = [...d.nodes, curriculum];
-		return { ...d, nodes };
-		//TODO auf relay speichern
-	});
-}
 export function changeSelectedState(val) {
 	db.update((d) => ({ ...d, selectedState: val }));
 }

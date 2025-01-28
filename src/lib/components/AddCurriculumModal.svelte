@@ -1,6 +1,7 @@
 <script>
 	import { config } from '$lib/config';
-	import { db, addCurriculum, changeSelectedState } from '$lib/db.js';
+	import { db, changeSelectedState } from '$lib/db.js';
+	import { publishCurriculum } from '$lib/ndk';
 	export let modalId = 'modal';
 	let dialogRef;
 
@@ -49,7 +50,7 @@
 
 		<div class="modal-action">
 			<form method="dialog">
-				<button onclick={() => addCurriculum(curriculum)} class="btn">Lehrplan anlegen</button>
+				<button onclick={() => publishCurriculum(curriculum)} class="btn">Lehrplan anlegen</button>
 				<button class="btn">Close</button>
 			</form>
 		</div>

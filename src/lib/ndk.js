@@ -1,5 +1,6 @@
 import NDK, { NDKEvent, NDKNip07Signer } from '@nostr-dev-kit/ndk';
 import { db, getChildren } from '$lib/db';
+import { shortUUID } from '$lib/utils.js';
 import { get } from 'svelte/store';
 
 const nip07signer = new NDKNip07Signer();
@@ -9,19 +10,35 @@ export const ndk = new NDK({
 
 ndk.connect();
 
-// TODO call this first and then update db
-export function publishCurriculum(id) {
-	const children = getChildren(id, get(db).nodes).map((e) => e.id);
-	children.push(id);
-	const nodes = get(db).nodes.filter((e) => children.includes(e.id));
-	const event = new NDKEvent(ndk);
-	event.kind = 30166;
-	event.content = 'ein lehrplanfragment';
-	event.tags = [['d', id.toString()], ...nodes.map((n) => ['fr', JSON.stringify(n)])];
+export async function publishCurriculum(curriculum) {
 	if (!ndk.signer) {
 		ndk.signer = nip07signer;
 	}
-	event.publish();
+	const event = new NDKEvent(ndk);
+	event.kind = 30166;
+	event.content = 'ein lehrplanfragment';
+
+	if (curriculum.id) {
+		const children = getChildren(curriculum.id, get(db).nodes).map((e) => e.id);
+		children.push(curriculum.id);
+		const nodes = get(db).nodes.filter((e) => children.includes(e.id));
+		event.tags = [['d', curriculum.id.toString()], ...nodes.map((n) => ['fr', JSON.stringify(n)])];
+
+		await event.publish();
+	} else {
+		curriculum.id = shortUUID();
+		event.tags = [
+			['d', curriculum.id.toString()],
+			['fr', JSON.stringify(curriculum)]
+		];
+		await event.publish(); // publish to get the event id
+
+		curriculum.eventId = event.id;
+		db.update((d) => {
+			const nodes = [...d.nodes, curriculum];
+			return { ...d, nodes };
+		});
+	}
 }
 
 function mergeArraysById(array1, array2) {

@@ -13,7 +13,7 @@
 	if (!db.selectedCurriculum) {
 		setSelectedCurriculum(data.id);
 	}
-	const curriculum = data.id;
+	const curriculumId = data.id;
 	const lpf = lehrplanfragmente(data.id);
 </script>
 
@@ -27,7 +27,9 @@
 		<h1 class=" text-lg">
 			{data.title} ({data.state})
 		</h1>
-		<button onclick={() => publishCurriculum(curriculum)} class="btn btn-ghost"><Save /></button>
+		<button onclick={() => publishCurriculum({ id: curriculumId })} class="btn btn-ghost"
+			><Save /></button
+		>
 	</div>
 
 	{#if $lpf.length > 0}
@@ -38,7 +40,7 @@
 			<Plus />
 		</button>
 		{#each $lpf as node (node.id)}
-			<Fragment fragmentId={node.id} {curriculum} />
+			<Fragment fragmentId={node.id} curriculum={curriculumId} />
 		{/each}
 	{/if}
 
